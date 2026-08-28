@@ -1,0 +1,55 @@
+name: Materialize source
+
+on:
+  push:
+    branches: [feat/repopack-core]
+    paths:
+      - ".bootstrap/source.tar.gz"
+      - "docs/assets/repopack-hero.png"
+      - ".github/workflows/materialize-source.yml"
+
+permissions:
+  contents: write
+
+jobs:
+  materialize:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - name: Check out staging branch
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          ref: feat/repopack-core
+          fetch-depth: 0
+          persist-credentials: true
+
+      - name: Validate source payload
+        shell: bash
+        run: |
+          set -euo pipefail
+          echo "cd5e765f0eaeb681874d3eba109e82f3e4877d9c5d10a713f6182ca978c817fb  .bootstrap/source.tar.gz" | sha256sum --check --strict
+          tar -tzf .bootstrap/source.tar.gz | grep -Fxq './package.json'
+          tar -tzf .bootstrap/source.tar.gz | grep -Fxq './src/build.ts'
+          test -f docs/assets/repopack-hero.png
+
+      - name: Materialize repository source
+        shell: bash
+        run: |
+          set -euo pipefail
+          cp .bootstrap/source.tar.gz /tmp/source.tar.gz
+          cp docs/assets/repopack-hero.png /tmp/repopack-hero.png
+          find . -mindepth 1 -maxdepth 1 ! -name .git -exec rm -rf {} +
+          tar -xzf /tmp/source.tar.gz -C .
+          mkdir -p docs/assets
+          cp /tmp/repopack-hero.png docs/assets/repopack-hero.png
+          chmod +x bin/repopack.mjs
+
+      - name: Commit materialized source
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -m "feat: add deterministic repository context compiler"
+          git push origin HEAD:feat/repopack-core
