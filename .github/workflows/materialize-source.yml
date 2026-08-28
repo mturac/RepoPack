@@ -40,10 +40,13 @@ jobs:
         run: |
           set -euo pipefail
           cp docs/assets/repopack-hero.png /tmp/repopack-hero.png
+          cp .github/workflows/materialize-source.yml /tmp/materialize-source.yml
           find . -mindepth 1 -maxdepth 1 ! -name .git -exec rm -rf {} +
           tar -xzf /tmp/repopack-source.tar.gz -C .
-          mkdir -p docs/assets
+          mkdir -p docs/assets .github/workflows
           cp /tmp/repopack-hero.png docs/assets/repopack-hero.png
+          rm -f .github/workflows/ci.yml
+          cp /tmp/materialize-source.yml .github/workflows/materialize-source.yml
           chmod +x bin/repopack.mjs
 
       - name: Commit materialized source
