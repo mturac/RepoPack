@@ -23,13 +23,14 @@ jobs:
           fetch-depth: 0
           persist-credentials: true
 
-      - name: Validate source payload
+      - name: Validate staged source
         shell: bash
         run: |
           set -euo pipefail
-          echo "cd5e765f0eaeb681874d3eba109e82f3e4877d9c5d10a713f6182ca978c817fb  .bootstrap/source.tar.gz" | sha256sum --check --strict
+          sha256sum .bootstrap/source.tar.gz
           tar -tzf .bootstrap/source.tar.gz | grep -Fxq './package.json'
           tar -tzf .bootstrap/source.tar.gz | grep -Fxq './src/build.ts'
+          tar -tzf .bootstrap/source.tar.gz | grep -Fxq './test/build.test.mjs'
           test -f docs/assets/repopack-hero.png
 
       - name: Materialize repository source
