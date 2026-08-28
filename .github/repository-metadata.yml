@@ -1,0 +1,10 @@
+description: Deterministic, secret-safe, task-specific repository context bundles for coding agents.
+topics:
+  - vibe-coding
+  - coding-agents
+  - context-engineering
+  - repository-analysis
+  - prompt-context
+  - codex
+  - claude-code
+  - developer-tools

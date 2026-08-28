@@ -1,0 +1,179 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/mturac/RepoPack/main/schema/repopack-bundle.schema.json",
+  "title": "RepoPack Context Bundle",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion",
+    "createdAt",
+    "repository",
+    "task",
+    "budget",
+    "files",
+    "omitted",
+    "findings",
+    "dependencies",
+    "bundleHash"
+  ],
+  "properties": {
+    "schemaVersion": {
+      "const": "1"
+    },
+    "createdAt": {
+      "type": "string"
+    },
+    "repository": {
+      "type": "object",
+      "required": [
+        "name",
+        "dirty",
+        "git",
+        "discoveredFiles"
+      ],
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "head": {
+          "type": "string"
+        },
+        "branch": {
+          "type": "string"
+        },
+        "dirty": {
+          "type": "boolean"
+        },
+        "git": {
+          "type": "boolean"
+        },
+        "discoveredFiles": {
+          "type": "integer",
+          "minimum": 0
+        }
+      },
+      "additionalProperties": false
+    },
+    "task": {
+      "type": "object",
+      "required": [
+        "text",
+        "hash",
+        "terms"
+      ],
+      "properties": {
+        "text": {
+          "type": "string"
+        },
+        "hash": {
+          "type": "string",
+          "pattern": "^sha256:"
+        },
+        "terms": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "budget": {
+      "type": "object",
+      "required": [
+        "limitTokens",
+        "usedTokens",
+        "omittedForBudget"
+      ],
+      "properties": {
+        "limitTokens": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "usedTokens": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "omittedForBudget": {
+          "type": "integer",
+          "minimum": 0
+        }
+      },
+      "additionalProperties": false
+    },
+    "files": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "path",
+          "role",
+          "volatility",
+          "content",
+          "contentHash",
+          "estimatedTokens",
+          "score",
+          "scoreEvidence",
+          "truncated"
+        ],
+        "properties": {
+          "path": {
+            "type": "string"
+          },
+          "role": {
+            "enum": [
+              "manifest",
+              "contract",
+              "migration",
+              "test",
+              "documentation",
+              "source",
+              "config",
+              "other"
+            ]
+          },
+          "volatility": {
+            "enum": [
+              "stable",
+              "volatile"
+            ]
+          },
+          "content": {
+            "type": "string"
+          },
+          "contentHash": {
+            "type": "string",
+            "pattern": "^sha256:"
+          },
+          "estimatedTokens": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "score": {
+            "type": "number"
+          },
+          "scoreEvidence": {
+            "type": "array"
+          },
+          "truncated": {
+            "type": "boolean"
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "omitted": {
+      "type": "array"
+    },
+    "findings": {
+      "type": "array"
+    },
+    "dependencies": {
+      "type": "array"
+    },
+    "bundleHash": {
+      "type": "string",
+      "pattern": "^sha256:"
+    }
+  }
+}

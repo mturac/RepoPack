@@ -1,0 +1,23 @@
+{
+  "version": 1,
+  "budgetTokens": 60000,
+  "maxFileBytes": 256000,
+  "maxFileTokens": 6000,
+  "include": [
+    "src/**",
+    "test/**",
+    "package.json",
+    "README.md"
+  ],
+  "exclude": [
+    "src/generated/**"
+  ],
+  "priorityPaths": [
+    "src/billing/**",
+    "contracts/**"
+  ],
+  "forbiddenPaths": [
+    "fixtures/private/**"
+  ],
+  "includeUntracked": true
+}

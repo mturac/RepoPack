@@ -1,0 +1,28 @@
+{
+  "name": "@mturac/repopack",
+  "version": "0.1.0",
+  "description": "Deterministic, secret-safe, task-specific repository context bundles for coding agents.",
+  "type": "module",
+  "license": "Apache-2.0",
+  "author": "Mehmet Turac",
+  "repository": { "type": "git", "url": "git+https://github.com/mturac/RepoPack.git" },
+  "bugs": { "url": "https://github.com/mturac/RepoPack/issues" },
+  "homepage": "https://github.com/mturac/RepoPack#readme",
+  "keywords": ["coding-agent", "vibe-coding", "context-engineering", "repository-context", "prompt-context", "privacy", "codex", "claude-code"],
+  "engines": { "node": ">=22" },
+  "files": ["bin/", "dist/", "schema/", "examples/", "README.md", "LICENSE", "NOTICE", "CHANGELOG.md"],
+  "bin": { "repopack": "./bin/repopack.mjs" },
+  "exports": { ".": { "types": "./dist/index.d.ts", "import": "./dist/index.js" } },
+  "types": "./dist/index.d.ts",
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "check": "npm run build && node --check bin/repopack.mjs",
+    "test": "npm run build && node --test test/*.test.mjs",
+    "test:types": "tsc -p tsconfig.type-tests.json",
+    "verify:schema": "node scripts/verify-schema.mjs",
+    "verify:assets": "node scripts/verify-assets.mjs",
+    "verify:package": "node scripts/package-smoke.mjs",
+    "verify": "npm run check && npm run test:types && node --test test/*.test.mjs && npm run verify:schema && npm run verify:assets && npm run verify:package"
+  },
+  "devDependencies": { "typescript": "5.8.3" }
+}
