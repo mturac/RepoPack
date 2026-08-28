@@ -1,0 +1,14 @@
+{
+  "description": "Deterministic, privacy-safe repository context bundles for coding agents.",
+  "homepage": "https://github.com/mturac/RepoPack#readme",
+  "topics": [
+    "coding-agent",
+    "vibe-coding",
+    "context-engineering",
+    "repository-context",
+    "developer-tools",
+    "codex",
+    "claude-code",
+    "typescript"
+  ]
+}
