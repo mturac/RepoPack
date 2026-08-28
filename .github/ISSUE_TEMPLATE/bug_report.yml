@@ -1,0 +1,16 @@
+name: Bug report
+description: Report a reproducible RepoPack defect
+title: "bug: "
+body:
+  - type: textarea
+    id: reproduction
+    attributes: { label: Reproduction, description: Include a minimal repository shape and exact command. }
+    validations: { required: true }
+  - type: textarea
+    id: expected
+    attributes: { label: Expected behavior }
+    validations: { required: true }
+  - type: textarea
+    id: actual
+    attributes: { label: Actual behavior }
+    validations: { required: true }
