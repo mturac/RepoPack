@@ -1,0 +1,35 @@
+name: Feature request
+description: Propose a focused context-building capability
+title: "feat: "
+labels: [enhancement]
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem
+      description: Describe the coding-agent failure or workflow cost this solves.
+    validations:
+      required: true
+  - type: textarea
+    id: evidence
+    attributes:
+      label: Evidence
+      description: Explain how the behavior can be measured without a hidden model judgment.
+    validations:
+      required: true
+  - type: textarea
+    id: contract
+    attributes:
+      label: Proposed public contract
+      description: Show CLI, API, schema, or artifact changes.
+    validations:
+      required: true
+  - type: checkboxes
+    id: boundaries
+    attributes:
+      label: Boundaries
+      options:
+        - label: The proposal can remain deterministic and local-first.
+          required: true
+        - label: The proposal does not require uploading repository source.
+          required: true
