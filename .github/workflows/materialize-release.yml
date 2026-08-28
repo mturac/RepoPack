@@ -1,0 +1,56 @@
+name: Materialize release assets
+
+on:
+  push:
+    branches: [feat/repopack-core]
+    paths:
+      - ".bootstrap/**"
+      - "scripts/render-hero.py"
+      - ".github/workflows/materialize-release.yml"
+
+permissions:
+  contents: write
+
+jobs:
+  materialize:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 12
+    steps:
+      - name: Check out staging branch
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          ref: feat/repopack-core
+          fetch-depth: 0
+          persist-credentials: true
+
+      - name: Materialize documentation and package state
+        shell: bash
+        run: |
+          set -euo pipefail
+          cp .bootstrap/README.md README.md
+          python3 -m pip install --disable-pip-version-check --no-input pillow==11.3.0
+          python3 scripts/render-hero.py
+          chmod +x bin/repopack.mjs
+          npm install --ignore-scripts --package-lock-only
+          npm ci --ignore-scripts
+
+      - name: Verify exact release tree
+        run: npm run verify
+
+      - name: Remove one-shot scaffolding
+        shell: bash
+        run: |
+          set -euo pipefail
+          rm -rf .bootstrap
+          rm .github/workflows/materialize-release.yml
+
+      - name: Commit verified release tree
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git diff --cached --check
+          git commit -m "feat: materialize verified RepoPack release"
+          git push origin HEAD:feat/repopack-core
