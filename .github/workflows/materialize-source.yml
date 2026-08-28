@@ -4,7 +4,7 @@ on:
   push:
     branches: [feat/repopack-core]
     paths:
-      - ".bootstrap/source.tar.gz"
+      - ".bootstrap/chunks/**"
       - "docs/assets/repopack-hero.png"
       - ".github/workflows/materialize-source.yml"
 
@@ -23,24 +23,24 @@ jobs:
           fetch-depth: 0
           persist-credentials: true
 
-      - name: Validate staged source
+      - name: Reconstruct and validate exact source
         shell: bash
         run: |
           set -euo pipefail
-          sha256sum .bootstrap/source.tar.gz
-          tar -tzf .bootstrap/source.tar.gz | grep -Fxq './package.json'
-          tar -tzf .bootstrap/source.tar.gz | grep -Fxq './src/build.ts'
-          tar -tzf .bootstrap/source.tar.gz | grep -Fxq './test/build.test.mjs'
+          cat .bootstrap/chunks/part.* | tr -d '\r\n' | base64 --decode > /tmp/repopack-source.tar.gz
+          echo "f858e4d5ae40ce2e9156cc945ffd4f70ccec9a72ceff427463b87066d30f4619  /tmp/repopack-source.tar.gz" | sha256sum --check --strict
+          tar -tzf /tmp/repopack-source.tar.gz | grep -Fxq './package.json'
+          tar -tzf /tmp/repopack-source.tar.gz | grep -Fxq './src/build.ts'
+          tar -tzf /tmp/repopack-source.tar.gz | grep -Fxq './test/build.test.mjs'
           test -f docs/assets/repopack-hero.png
 
       - name: Materialize repository source
         shell: bash
         run: |
           set -euo pipefail
-          cp .bootstrap/source.tar.gz /tmp/source.tar.gz
           cp docs/assets/repopack-hero.png /tmp/repopack-hero.png
           find . -mindepth 1 -maxdepth 1 ! -name .git -exec rm -rf {} +
-          tar -xzf /tmp/source.tar.gz -C .
+          tar -xzf /tmp/repopack-source.tar.gz -C .
           mkdir -p docs/assets
           cp /tmp/repopack-hero.png docs/assets/repopack-hero.png
           chmod +x bin/repopack.mjs
